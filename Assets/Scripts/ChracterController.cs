@@ -42,6 +42,10 @@ public class ChracterController : MonoBehaviour
             
             jump = true;
         }
+        else
+        {
+            jump = false;
+        }
 
         if (Input.GetButtonDown("Jump") && rb.velocity.y > 0f)
         {
