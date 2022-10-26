@@ -2430,7 +2430,7 @@ GameObject:
   - component: {fileID: 1645430830}
   - component: {fileID: 1645430829}
   - component: {fileID: 1645430835}
-  - component: {fileID: 1645430833}
+  - component: {fileID: 1645430836}
   - component: {fileID: 1645430832}
   - component: {fileID: 1645430834}
   m_Layer: 0
@@ -2550,40 +2550,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &1645430833
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1645430828}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: be7567424930ad64b90011828799e28e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  runSpeed: 8
-  jumpingPower: 10
-  isFacingRight: 0
-  rb: {fileID: 1645430832}
-  groundCheck: {fileID: 1183258420}
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  isTouchingFront: 0
-  frontCheck: {fileID: 1931273673}
-  wallSliding: 0
-  wallSlidingSpeed: 2
-  wallJumping: 0
-  xWallForce: 20
-  yWallForce: 15
-  wallJumpTime: 0.05
-  isGroundedb: 0
-  whatIsGround:
-    serializedVersion: 2
-    m_Bits: 64
-  checkRadius: 1
-  isGrounded: 0
 --- !u!70 &1645430834
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -2613,6 +2579,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Speed: 4
+  WalkingCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  WalkSpeedingTime: 2.5
   JumpForce: 800
   WallJumpXForce: 600
   GroundCheck: {fileID: 1183258420}
@@ -2621,6 +2612,18 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   drawGizmos: 0
+--- !u!114 &1645430836
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1645430828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d7b944863035564f88d36e4e05abc48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1818854464
 GameObject:
   m_ObjectHideFlags: 0
