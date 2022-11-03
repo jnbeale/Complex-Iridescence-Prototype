@@ -56,6 +56,9 @@ public class Movement : MonoBehaviour
     [Tooltip("Layer of ground tiles")]
     [SerializeField]
     private LayerMask GroundLayer;
+
+    //animator
+    public Animator anim;
     #endregion
 
     #region public
@@ -79,6 +82,8 @@ public class Movement : MonoBehaviour
     }
     private void FixedUpdate()
     {
+        //animator 
+        anim.SetFloat("speed",Mathf.Abs(_horizontal));
         CheckingGround();
         // aplying physics
         if (!_canMove)

@@ -2450,7 +2450,7 @@ Animator:
   m_GameObject: {fileID: 1645430828}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 57d2fc05171e32744a71fa67701a9768, type: 2}
+  m_Controller: {fileID: 9100000, guid: 6b8eca48b86bf2949b265d8cd5c7bb64, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -2578,7 +2578,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff42fe19b2f430d45a1aee16be6faee0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 4
+  Speed: 10
   WalkingCurve:
     serializedVersion: 2
     m_Curve:
@@ -2603,7 +2603,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  WalkSpeedingTime: 2.5
+  WalkSpeedingTime: 1.1
   JumpForce: 800
   WallJumpXForce: 600
   GroundCheck: {fileID: 1183258420}
@@ -2611,6 +2611,7 @@ MonoBehaviour:
   GroundLayer:
     serializedVersion: 2
     m_Bits: 64
+  anim: {fileID: 1645430829}
   drawGizmos: 0
 --- !u!114 &1645430836
 MonoBehaviour:
