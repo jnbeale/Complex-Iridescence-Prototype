@@ -22,6 +22,7 @@ public class Movement : MonoBehaviour
     //jump variables
     private bool _doubleJumped = false;
     private bool _grounded = false;
+    private bool _isJumping = false;
     #endregion
 
     #region serialized 
@@ -82,8 +83,10 @@ public class Movement : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        //animator 
+        //apply animator 
         anim.SetFloat("speed",Mathf.Abs(_horizontal));
+        //call to jump check function
+        isJumping();
         CheckingGround();
         // aplying physics
         if (!_canMove)
@@ -206,6 +209,21 @@ public class Movement : MonoBehaviour
         direction.y = 0; // setting velocity to zero
         _rb.velocity = direction;
         _rb.AddForce(new Vector2(0, JumpForce)); // adding force
+    }
+
+    //function to check if player is jumping
+    public void isJumping()
+    {
+        if(!_grounded)
+        {
+            _isJumping = true;
+            anim.SetBool("isJumping",true);
+        }
+        else
+        {
+            _isJumping = false;
+            anim.SetBool("isJumping",false);
+        }
     }
 
     private void WallJump()
