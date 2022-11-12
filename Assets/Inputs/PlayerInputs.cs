@@ -44,6 +44,24 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Shoot"",
+                    ""type"": ""Button"",
+                    ""id"": ""48bcac25-cddc-4fb0-a34b-e986f2742a07"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Vertical Aim"",
+                    ""type"": ""Value"",
+                    ""id"": ""553c6cb7-e217-47bd-975c-8bc980351af8"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -81,39 +99,6 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""1D Axis"",
-                    ""id"": ""f95e770b-7d10-4ca6-9395-32e8e8957714"",
-                    ""path"": ""1DAxis"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Horizontal"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""negative"",
-                    ""id"": ""2e0ee301-00fa-4595-8b62-28b3205bc914"",
-                    ""path"": """",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Horizontal"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""positive"",
-                    ""id"": ""a4158860-641b-4ea2-aef9-1101daaa94c6"",
-                    ""path"": """",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Horizontal"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
                     ""name"": """",
                     ""id"": ""e559a85a-67fe-420c-8eb3-55e032b48308"",
                     ""path"": ""<Keyboard>/space"",
@@ -123,6 +108,72 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                     ""action"": ""Jumps"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""37b0ecd8-6594-4ccb-bac8-600a8b80d4cf"",
+                    ""path"": ""<Keyboard>/ctrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Shoot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""keyboard"",
+                    ""id"": ""2b9bafff-18f6-4a99-9aad-954285f2ab42"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Vertical Aim"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""ecd3fa7d-cd65-48b1-914b-64a6947bfd7c"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Vertical Aim"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""590951ce-f32d-450e-bd70-a6295616ee76"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Vertical Aim"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""d06ca132-b8bb-42ef-8f3c-ab088826361b"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Vertical Aim"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""02731db5-67cf-445f-8c7b-564b2f116656"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Vertical Aim"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -133,6 +184,8 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
         m_Movement = asset.FindActionMap("Movement", throwIfNotFound: true);
         m_Movement_Horizontal = m_Movement.FindAction("Horizontal", throwIfNotFound: true);
         m_Movement_Jumps = m_Movement.FindAction("Jumps", throwIfNotFound: true);
+        m_Movement_Shoot = m_Movement.FindAction("Shoot", throwIfNotFound: true);
+        m_Movement_VerticalAim = m_Movement.FindAction("Vertical Aim", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -194,12 +247,16 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
     private IMovementActions m_MovementActionsCallbackInterface;
     private readonly InputAction m_Movement_Horizontal;
     private readonly InputAction m_Movement_Jumps;
+    private readonly InputAction m_Movement_Shoot;
+    private readonly InputAction m_Movement_VerticalAim;
     public struct MovementActions
     {
         private @PlayerInputs m_Wrapper;
         public MovementActions(@PlayerInputs wrapper) { m_Wrapper = wrapper; }
         public InputAction @Horizontal => m_Wrapper.m_Movement_Horizontal;
         public InputAction @Jumps => m_Wrapper.m_Movement_Jumps;
+        public InputAction @Shoot => m_Wrapper.m_Movement_Shoot;
+        public InputAction @VerticalAim => m_Wrapper.m_Movement_VerticalAim;
         public InputActionMap Get() { return m_Wrapper.m_Movement; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -215,6 +272,12 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                 @Jumps.started -= m_Wrapper.m_MovementActionsCallbackInterface.OnJumps;
                 @Jumps.performed -= m_Wrapper.m_MovementActionsCallbackInterface.OnJumps;
                 @Jumps.canceled -= m_Wrapper.m_MovementActionsCallbackInterface.OnJumps;
+                @Shoot.started -= m_Wrapper.m_MovementActionsCallbackInterface.OnShoot;
+                @Shoot.performed -= m_Wrapper.m_MovementActionsCallbackInterface.OnShoot;
+                @Shoot.canceled -= m_Wrapper.m_MovementActionsCallbackInterface.OnShoot;
+                @VerticalAim.started -= m_Wrapper.m_MovementActionsCallbackInterface.OnVerticalAim;
+                @VerticalAim.performed -= m_Wrapper.m_MovementActionsCallbackInterface.OnVerticalAim;
+                @VerticalAim.canceled -= m_Wrapper.m_MovementActionsCallbackInterface.OnVerticalAim;
             }
             m_Wrapper.m_MovementActionsCallbackInterface = instance;
             if (instance != null)
@@ -225,6 +288,12 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                 @Jumps.started += instance.OnJumps;
                 @Jumps.performed += instance.OnJumps;
                 @Jumps.canceled += instance.OnJumps;
+                @Shoot.started += instance.OnShoot;
+                @Shoot.performed += instance.OnShoot;
+                @Shoot.canceled += instance.OnShoot;
+                @VerticalAim.started += instance.OnVerticalAim;
+                @VerticalAim.performed += instance.OnVerticalAim;
+                @VerticalAim.canceled += instance.OnVerticalAim;
             }
         }
     }
@@ -233,5 +302,7 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
     {
         void OnHorizontal(InputAction.CallbackContext context);
         void OnJumps(InputAction.CallbackContext context);
+        void OnShoot(InputAction.CallbackContext context);
+        void OnVerticalAim(InputAction.CallbackContext context);
     }
 }

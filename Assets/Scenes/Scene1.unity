@@ -2431,6 +2431,7 @@ GameObject:
   - component: {fileID: 1645430829}
   - component: {fileID: 1645430835}
   - component: {fileID: 1645430836}
+  - component: {fileID: 1645430837}
   - component: {fileID: 1645430832}
   - component: {fileID: 1645430834}
   m_Layer: 0
@@ -2520,7 +2521,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1645430828}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.07, y: -1.9232, z: 0}
+  m_LocalPosition: {x: -6.08, y: -1.9232, z: 0}
   m_LocalScale: {x: 1.0258, y: 1.0259, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2578,6 +2579,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff42fe19b2f430d45a1aee16be6faee0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _anim: {fileID: 0}
   Speed: 10
   WalkingCurve:
     serializedVersion: 2
@@ -2611,7 +2613,6 @@ MonoBehaviour:
   GroundLayer:
     serializedVersion: 2
     m_Bits: 64
-  anim: {fileID: 1645430829}
   drawGizmos: 0
 --- !u!114 &1645430836
 MonoBehaviour:
@@ -2625,6 +2626,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d7b944863035564f88d36e4e05abc48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1645430837
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1645430828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28e0023aaa4056241b6d6fbf3042b153, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cam: {fileID: 1331065746}
+  bullet: {fileID: 33253516572330293, guid: 0b4459092ee771540832a42ac537520d, type: 3}
 --- !u!1 &1818854464
 GameObject:
   m_ObjectHideFlags: 0

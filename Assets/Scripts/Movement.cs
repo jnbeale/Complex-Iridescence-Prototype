@@ -5,6 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Collider2D))]
 [RequireComponent(typeof(Inputs))]
+[RequireComponent(typeof(Animator))]
 public class Movement : MonoBehaviour
 {
     #region private
@@ -14,15 +15,21 @@ public class Movement : MonoBehaviour
     private Collider2D _col;
     // movement variables
     private float _horizontal;
-    private bool _facingRight = true;
     private bool _canMove = true;
 
     // movevent times for curves
     private float _started;
+    private bool _fliping = false;
     //jump variables
     private bool _doubleJumped = false;
     private bool _grounded = false;
     private bool _isJumping = false;
+    private float _midAirSpeed = 0;
+    //animator
+    private Animator _anim;
+    #endregion
+    #region properties
+    public bool _facingRight { get; private set; }
     #endregion
 
     #region serialized 
@@ -38,6 +45,8 @@ public class Movement : MonoBehaviour
     [Range(0.1f,6)]
     [SerializeField]
     private float WalkSpeedingTime = 1f;
+    [SerializeField]
+    private float ChangeDirectionDelay = 0.2f;
     [Header("Jump variables")]
     [Tooltip("Force of player jump")]
     [Range(250, 2000)]
@@ -57,9 +66,6 @@ public class Movement : MonoBehaviour
     [Tooltip("Layer of ground tiles")]
     [SerializeField]
     private LayerMask GroundLayer;
-
-    //animator
-    public Animator anim;
     #endregion
 
     #region public
@@ -70,12 +76,14 @@ public class Movement : MonoBehaviour
 
     private void Awake()
     {
+        _facingRight = true;
         // checking grounded
         _grounded = Physics2D.OverlapCircle(GroundCheck.position, GroundRadius, GroundLayer);
         // getting components
         _transform = GetComponent<Transform>();
         _rb = GetComponent<Rigidbody2D>();
         _col = GetComponent<CapsuleCollider2D>();
+        _anim = GetComponent<Animator>();
     }
     private void Start()
     {
@@ -84,7 +92,7 @@ public class Movement : MonoBehaviour
     private void FixedUpdate()
     {
         //apply animator 
-        anim.SetFloat("speed",Mathf.Abs(_horizontal));
+        _anim.SetFloat("speed",Mathf.Abs(_horizontal));
         //call to jump check function
         isJumping();
         CheckingGround();
@@ -108,6 +116,10 @@ public class Movement : MonoBehaviour
     }
     private void Move(float direction)
     {
+        if(direction == -_horizontal)
+        {
+            StartCoroutine(ChangeDirectionWait());
+        }
         _horizontal = direction;
     }
     #endregion
@@ -131,14 +143,25 @@ public class Movement : MonoBehaviour
     // checking if player is grounded
     private void CheckingGround()
     {
-        _grounded = Physics2D.OverlapCircle(GroundCheck.position, GroundRadius, GroundLayer);
-        if (_grounded)
+        if(!Physics2D.OverlapCircle(GroundCheck.position, GroundRadius, GroundLayer))
         {
-            _doubleJumped = false;
+            if(_grounded)
+            {
+                _grounded = false;
+                _midAirSpeed = CheckSpeed();
+            }
+            return;
         }
+        _doubleJumped = false;
+        _grounded = true;
     }
     #endregion
     #region Movement methods
+    // reseting time when player stopped
+    private void StartWalking()
+    {
+        _started = Time.time;
+    }
     private void Move()
     {
         Flip(); // check rotation
@@ -157,12 +180,22 @@ public class Movement : MonoBehaviour
     // return speed based on curve value
     private float CheckSpeed()
     {
+        if (!_grounded)
+        {
+            return _midAirSpeed;
+        }
+        if(_fliping)
+        {
+            return 0;
+        }
         return Speed * WalkingCurve.Evaluate(((Time.time - _started)/WalkSpeedingTime));
     }
-    // reseting time when player stopped
-    private void StartWalking()
+    private IEnumerator ChangeDirectionWait()
     {
+        _fliping = true;
+        yield return new WaitForSeconds(ChangeDirectionDelay);
         _started = Time.time;
+        _fliping = false;
     }
     // update player direction
     private void Flip()
@@ -191,6 +224,7 @@ public class Movement : MonoBehaviour
         if (!_grounded &&  _doubleJumped) return; // check if player can jump or double jump
         if (_grounded)
         {
+            _midAirSpeed = CheckSpeed();
             Jump(); // base jump on ground
             return;
         }
@@ -217,12 +251,12 @@ public class Movement : MonoBehaviour
         if(!_grounded)
         {
             _isJumping = true;
-            anim.SetBool("isJumping",true);
+            _anim.SetBool("isJumping",true);
         }
         else
         {
             _isJumping = false;
-            anim.SetBool("isJumping",false);
+            _anim.SetBool("isJumping",false);
         }
     }
 
