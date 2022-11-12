@@ -10,39 +10,32 @@ public class Combat : MonoBehaviour
     private int _zone = -1;
     private Color[] _colors;
     #endregion
-    public Camera cam;
-    public Bullet bullet;
+    public Bullet bullet; // for spawning bullets
 
-    private Movement _movement;
+    public Movement _movement { get; set; }
     private Vector2 _aimVector;
 
     private void Awake()
     {
-        _movement = GetComponent<Movement>();
         _colors = new Color[8];
         for (int i = 0; i < 8; i++)
         {
             _colors[i] = Color.red;
         }
     }
-    private void Start()
-    {
-        PlayerInputs input = Inputs.GetInputs();
-        input.Movement.Shoot.performed += ctx => Shoot();
-        input.Movement.VerticalAim.performed += ctx => Aim(ctx.ReadValue<Vector2>());
-    }
     private void Update()
     {
         CalculateZone();
         ColorCheck();
     }
-    private void Aim(Vector2 aimVector)
+    public void Aim(Vector2 aimVector)
     {
         _aimVector = aimVector;
     }
     #region zone calculation
     private void CalculateZone()
     {
+        if (_movement == null) return;
         if (_movement._facingRight)
         {
             RightAim(_aimVector);
@@ -53,13 +46,13 @@ public class Combat : MonoBehaviour
     }
     private void RightAim(Vector2 aimDirection)
     {
-        if(aimDirection.x < 0 || aimDirection.x == 0)
+        if (aimDirection.x < 0 || aimDirection.x == 0)
         {
-            if(aimDirection.y < 0) 
+            if (aimDirection.y < 0)
             {
                 _zone = 6;
             }
-            else if (aimDirection.y > 0) 
+            else if (aimDirection.y > 0)
             {
                 _zone = 2;
             }
@@ -67,7 +60,8 @@ public class Combat : MonoBehaviour
             {
                 _zone = 0;
             }
-        }else
+        }
+        else
         {
             if (aimDirection.y < 0)
             {
@@ -117,7 +111,7 @@ public class Combat : MonoBehaviour
         }
     }
     #endregion
-    private void Shoot()
+    public void Shoot()
     {
         Bullet shot = Instantiate(bullet);
         shot.transform.position = transform.position;

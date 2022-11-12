@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
 {
-    [Header("Player Transform")]
-    public Transform player;
+    public Transform playerTrans;
 
     //camera transforms
     private Transform _camTransform;
@@ -14,11 +13,11 @@ public class CameraMovement : MonoBehaviour
     void Awake()
     {
         _camTransform = transform;
-        _ofset = _camTransform.position - player.position;
+        _ofset = _camTransform.position - playerTrans.position;
     }
 
     void LateUpdate() // runs after update, moves camera after player moved
     {
-        _camTransform.position = player.position + _ofset;
+        _camTransform.position = playerTrans.position + _ofset;
     }
 }

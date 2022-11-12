@@ -4,13 +4,11 @@ using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Collider2D))]
-[RequireComponent(typeof(Inputs))]
 [RequireComponent(typeof(Animator))]
 public class Movement : MonoBehaviour
 {
     #region private
     // component variables
-    private Transform _transform;
     private Rigidbody2D _rb;
     private Collider2D _col;
     // movement variables
@@ -26,10 +24,14 @@ public class Movement : MonoBehaviour
     private bool _isJumping = false;
     private bool _isWallJumping = false;
     private float _midAirSpeed = 0;
+    private float _counter = 0;
+
     //animator
     private Animator _anim;
     #endregion
     #region properties
+    public Transform _transform { get; set; }
+    
     public bool _facingRight { get; private set; }
     #endregion
 
@@ -43,20 +45,24 @@ public class Movement : MonoBehaviour
     [SerializeField]
     private AnimationCurve WalkingCurve;
     [Tooltip("Time how long it will take to reach max speed in seconds")]
-    [Range(0.1f,6)]
+    [Range(0.1f, 6)]
     [SerializeField]
     private float WalkSpeedingTime = 1f;
     [SerializeField]
     private float ChangeDirectionDelay = 0.2f;
     [Header("Jump variables")]
     [Tooltip("Force of player jump")]
-    //[Range(250, 2000)]
+    [Range(4, 25)]
     [SerializeField]
-    private float JumpForce = 800;
+    private float JumpForce = 7.5f;
     [Tooltip("Walljump X direction force")]
-    //[Range(250, 1600)]
+    [Range(1, 15)]
     [SerializeField]
     private float WallJumpSpeed = 10;
+    [Tooltip("How long it takes to reach max height of jump")]
+    [Range(0.2f, 15)]
+    [SerializeField]
+    private float JumpTime = 0.6f;
     [Tooltip("GroundCheck transform")]
     [SerializeField]
     private Transform GroundCheck;
@@ -73,9 +79,6 @@ public class Movement : MonoBehaviour
     [Header("Gizmos settings")]
     [Tooltip("Displays box for walljump checking, , if enabled error ocurs if game is not running. Dont worry it will disapear after game startd.")]
     public bool drawGizmos = false;
-    public float jumpTime;
-    public float fJumpTime = 0;
-    public float counter = 0;
     #endregion
 
     // used to modify jump force, 
@@ -87,43 +90,18 @@ public class Movement : MonoBehaviour
         // checking grounded
         _grounded = Physics2D.OverlapCircle(GroundCheck.position, GroundRadius, GroundLayer);
         // getting components
-        _transform = GetComponent<Transform>();
         _rb = GetComponent<Rigidbody2D>();
         _col = GetComponent<CapsuleCollider2D>();
         _anim = GetComponent<Animator>();
     }
-    private void Start()
-    {
-        SetUpInputs();
-    }
     private void FixedUpdate()
     {
         //apply animator 
-        _anim.SetFloat("speed",Mathf.Abs(_horizontal));
+        _anim.SetFloat("speed", Mathf.Abs(_horizontal));
         //call to jump check function
         isJumping();
         CheckingGround();
-        if (_isJumping && counter < jumpTime)
-        {
-            counter += Time.fixedDeltaTime;
-            Vector2 direction = _rb.velocity;
-            direction.y = JumpForce * Time.fixedDeltaTime * _JumpMultiplayer;
-            _rb.velocity = direction;
-        }
-        else if (_isWallJumping && counter < jumpTime)
-        {
-            counter += Time.fixedDeltaTime;
-            Vector2 direction = _rb.velocity;
-            direction.y = JumpForce * Time.fixedDeltaTime * _JumpMultiplayer;
-            direction.x = _facingRight ? WallJumpSpeed : -WallJumpSpeed;
-            _rb.velocity = direction;
-        }
-        else
-        {
-            counter = 0;
-            _isJumping = false;
-            _isWallJumping = false;
-        }
+        JumpCounting();
         if (!_canMove)
         {
             return;
@@ -131,30 +109,6 @@ public class Movement : MonoBehaviour
         Move();
     }
 
-    #region Input Handling
-    private void SetUpInputs()
-    {
-        PlayerInputs _inputs = Inputs.GetInputs();
-        //setting up c# events for input control
-        _inputs.Movement.Horizontal.started += ctx => StartWalking();
-        _inputs.Movement.Horizontal.performed += ctx => Move(ctx.ReadValue<float>());
-        _inputs.Movement.Horizontal.canceled += ctx => StopMovement();
-        _inputs.Movement.Jumps.performed += ctx => CheckJumps();
-        _inputs.Movement.Jumps.canceled += ctx => JumpCancel();
-    }
-    private void Move(float direction)
-    {
-        if(direction == -_horizontal)
-        {
-            StartCoroutine(ChangeDirectionWait());
-        }
-        _horizontal = direction;
-    }
-    private void StopMovement()
-    {
-        _horizontal = 0;
-    }
-    #endregion
     #region Checking
     //checking for wall
     private bool CheckWall()
@@ -175,7 +129,7 @@ public class Movement : MonoBehaviour
     // checking if player is grounded
     private void CheckingGround()
     {
-        if(!Physics2D.OverlapCircle(GroundCheck.position, GroundRadius, GroundLayer))
+        if (!Physics2D.OverlapCircle(GroundCheck.position, GroundRadius, GroundLayer))
         {
             if (_grounded)
             {
@@ -191,7 +145,7 @@ public class Movement : MonoBehaviour
             }
             return;
         }
-        if(!_grounded)
+        if (!_grounded)
         {
             _started = Time.time - (WalkSpeedingTime * 0.5f);
         }
@@ -200,8 +154,20 @@ public class Movement : MonoBehaviour
     }
     #endregion
     #region Movement methods
+    public void Move(float direction)
+    {
+        if (direction == -_horizontal)
+        {
+            StartCoroutine(ChangeDirectionWait());
+        }
+        _horizontal = direction;
+    }
+    public void StopMovement()
+    {
+        _horizontal = 0;
+    }
     // reseting time when player stopped
-    private void StartWalking()
+    public void StartWalking()
     {
         _started = Time.time;
     }
@@ -227,11 +193,11 @@ public class Movement : MonoBehaviour
         {
             return _midAirSpeed;
         }
-        if(_fliping)
+        if (_fliping)
         {
             return 0;
         }
-        return Speed * WalkingCurve.Evaluate(((Time.time - _started)/WalkSpeedingTime));
+        return Speed * WalkingCurve.Evaluate(((Time.time - _started) / WalkSpeedingTime));
     }
     private IEnumerator ChangeDirectionWait()
     {
@@ -256,7 +222,32 @@ public class Movement : MonoBehaviour
     }
     #endregion
     #region Jump methods
-    private void CheckJumps()
+    // calculating diferent jump heights
+    private void JumpCounting()
+    {
+        if (_isJumping && _counter < JumpTime) // for normal jump
+        {
+            _counter += Time.fixedDeltaTime;
+            Vector2 direction = _rb.velocity;
+            direction.y = JumpForce * Time.fixedDeltaTime * _JumpMultiplayer;
+            _rb.velocity = direction;
+        }
+        else if (_isWallJumping && _counter < JumpTime) // for wall jump
+        {
+            _counter += Time.fixedDeltaTime;
+            Vector2 direction = _rb.velocity;
+            direction.y = JumpForce * Time.fixedDeltaTime * _JumpMultiplayer;
+            direction.x = _facingRight ? WallJumpSpeed : -WallJumpSpeed;
+            _rb.velocity = direction;
+        }
+        else // for reseting
+        {
+            _counter = 0;
+            _isJumping = false;
+            _isWallJumping = false;
+        }
+    }
+    public void CheckJumps()
     {
         // check for wall jump
         if (CheckWall() && !_grounded)
@@ -264,7 +255,7 @@ public class Movement : MonoBehaviour
             WallJump(); // wall jump
             return;
         }
-        if (!_grounded &&  _doubleJumped) return; // check if player can jump or double jump
+        if (!_grounded && _doubleJumped) return; // check if player can jump or double jump
         if (_grounded)
         {
             _midAirSpeed = CheckSpeed();
@@ -288,13 +279,13 @@ public class Movement : MonoBehaviour
     //function to check if player is jumping
     public void isJumping()
     {
-        if(!_grounded)
+        if (!_grounded)
         {
-            _anim.SetBool("isJumping",true);
+            _anim.SetBool("isJumping", true);
         }
         else
         {
-            _anim.SetBool("isJumping",false);
+            _anim.SetBool("isJumping", false);
         }
     }
 
@@ -315,13 +306,13 @@ public class Movement : MonoBehaviour
         }
         _transform.rotation = Quaternion.Euler(0, 180, 0);
     }
-    private void JumpCancel()
+    public void JumpCancel()
     {
         _isJumping = false;
         _isWallJumping = false;
-        counter = 0;
+        _counter = 0;
     }
-    
+
     private IEnumerator WallJumpWait()
     {
         WaitForEndOfFrame wait = new WaitForEndOfFrame();
