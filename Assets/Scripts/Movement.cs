@@ -24,6 +24,7 @@ public class Movement : MonoBehaviour
     private bool _doubleJumped = false;
     private bool _grounded = false;
     private bool _isJumping = false;
+    private bool _isWallJumping = false;
     private float _midAirSpeed = 0;
     //animator
     private Animator _anim;
@@ -49,13 +50,13 @@ public class Movement : MonoBehaviour
     private float ChangeDirectionDelay = 0.2f;
     [Header("Jump variables")]
     [Tooltip("Force of player jump")]
-    [Range(250, 2000)]
+    //[Range(250, 2000)]
     [SerializeField]
     private float JumpForce = 800;
     [Tooltip("Walljump X direction force")]
-    [Range(250, 1600)]
+    //[Range(250, 1600)]
     [SerializeField]
-    private float WallJumpXForce = 600f;
+    private float WallJumpSpeed = 10;
     [Tooltip("GroundCheck transform")]
     [SerializeField]
     private Transform GroundCheck;
@@ -72,7 +73,13 @@ public class Movement : MonoBehaviour
     [Header("Gizmos settings")]
     [Tooltip("Displays box for walljump checking, , if enabled error ocurs if game is not running. Dont worry it will disapear after game startd.")]
     public bool drawGizmos = false;
+    public float jumpTime;
+    public float fJumpTime = 0;
+    public float counter = 0;
     #endregion
+
+    // used to modify jump force, 
+    private const float _JumpMultiplayer = 50;
 
     private void Awake()
     {
@@ -96,7 +103,27 @@ public class Movement : MonoBehaviour
         //call to jump check function
         isJumping();
         CheckingGround();
-        // aplying physics
+        if (_isJumping && counter < jumpTime)
+        {
+            counter += Time.fixedDeltaTime;
+            Vector2 direction = _rb.velocity;
+            direction.y = JumpForce * Time.fixedDeltaTime * _JumpMultiplayer;
+            _rb.velocity = direction;
+        }
+        else if (_isWallJumping && counter < jumpTime)
+        {
+            counter += Time.fixedDeltaTime;
+            Vector2 direction = _rb.velocity;
+            direction.y = JumpForce * Time.fixedDeltaTime * _JumpMultiplayer;
+            direction.x = _facingRight ? WallJumpSpeed : -WallJumpSpeed;
+            _rb.velocity = direction;
+        }
+        else
+        {
+            counter = 0;
+            _isJumping = false;
+            _isWallJumping = false;
+        }
         if (!_canMove)
         {
             return;
@@ -111,8 +138,9 @@ public class Movement : MonoBehaviour
         //setting up c# events for input control
         _inputs.Movement.Horizontal.started += ctx => StartWalking();
         _inputs.Movement.Horizontal.performed += ctx => Move(ctx.ReadValue<float>());
-        _inputs.Movement.Horizontal.canceled += ctx => _horizontal = 0;
+        _inputs.Movement.Horizontal.canceled += ctx => StopMovement();
         _inputs.Movement.Jumps.performed += ctx => CheckJumps();
+        _inputs.Movement.Jumps.canceled += ctx => JumpCancel();
     }
     private void Move(float direction)
     {
@@ -121,6 +149,10 @@ public class Movement : MonoBehaviour
             StartCoroutine(ChangeDirectionWait());
         }
         _horizontal = direction;
+    }
+    private void StopMovement()
+    {
+        _horizontal = 0;
     }
     #endregion
     #region Checking
@@ -145,12 +177,23 @@ public class Movement : MonoBehaviour
     {
         if(!Physics2D.OverlapCircle(GroundCheck.position, GroundRadius, GroundLayer))
         {
-            if(_grounded)
+            if (_grounded)
             {
                 _grounded = false;
-                _midAirSpeed = CheckSpeed();
+                if (_horizontal != 0)
+                {
+                    _midAirSpeed = CheckSpeed();
+                }
+                else
+                {
+                    _midAirSpeed = 0;
+                }
             }
             return;
+        }
+        if(!_grounded)
+        {
+            _started = Time.time - (WalkSpeedingTime * 0.5f);
         }
         _doubleJumped = false;
         _grounded = true;
@@ -239,10 +282,7 @@ public class Movement : MonoBehaviour
     }
     public void Jump()
     {
-        Vector2 direction = _rb.velocity;
-        direction.y = 0; // setting velocity to zero
-        _rb.velocity = direction;
-        _rb.AddForce(new Vector2(0, JumpForce)); // adding force
+        _isJumping = true;
     }
 
     //function to check if player is jumping
@@ -250,27 +290,17 @@ public class Movement : MonoBehaviour
     {
         if(!_grounded)
         {
-            _isJumping = true;
             _anim.SetBool("isJumping",true);
         }
         else
         {
-            _isJumping = false;
             _anim.SetBool("isJumping",false);
         }
     }
 
     private void WallJump()
     {
-        Vector2 direction = _rb.velocity;
-        direction = Vector2.zero;
-        _rb.velocity = direction; // setting velocity to zero
-        Vector2 force = new Vector2(WallJumpXForce, JumpForce);
-        if (_facingRight) // checking for wall jump direction
-        {
-            force.x = -force.x; 
-        }
-        _rb.AddForce(force); // adding force
+        _isWallJumping = true;
         _facingRight = !_facingRight;
         WallJumpFlip(); // changing rotation after wall jump
         StartCoroutine(WallJumpWait()); // waiting for player to touch ground or hit next wall for wall jump
@@ -284,6 +314,12 @@ public class Movement : MonoBehaviour
             return;
         }
         _transform.rotation = Quaternion.Euler(0, 180, 0);
+    }
+    private void JumpCancel()
+    {
+        _isJumping = false;
+        _isWallJumping = false;
+        counter = 0;
     }
     
     private IEnumerator WallJumpWait()
