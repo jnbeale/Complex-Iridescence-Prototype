@@ -5,22 +5,27 @@ using UnityEngine;
 public class Inputs : MonoBehaviour
 {
     // input action map for controls
-    private static PlayerInputs _inputs;
+    private PlayerInputs _inputs;
 
+    private void Awake()
+    {
+        _inputs = new PlayerInputs();
+    }
     private void OnEnable()
     {
+        if (_inputs == null) return;
         // enabling map
         _inputs.Enable();
     }
     private void OnDisable()
     {
+        if (_inputs == null) return;
         // disabling map
         _inputs.Disable();
     }
     public void Init(PlayerControler controler)
     {
         // movement methods
-        _inputs = new PlayerInputs();
         _inputs.Movement.Horizontal.started += ctx => controler._movevement.StartWalking();
         _inputs.Movement.Horizontal.performed += ctx => controler._movevement.Move(ctx.ReadValue<float>());
         _inputs.Movement.Horizontal.canceled += ctx => controler._movevement.StopMovement();
