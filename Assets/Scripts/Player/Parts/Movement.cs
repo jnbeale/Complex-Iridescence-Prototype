@@ -36,6 +36,13 @@ public class Movement : MonoBehaviour
 
     //health
     public int health = 3;
+    private GameObject temp;
+    private Transform Enemy;
+    private bool isTouchingEnemy = false;
+
+    public Transform touchingEnemy;
+
+    //public Transform weapon;
     
     #endregion
 
@@ -97,6 +104,8 @@ public class Movement : MonoBehaviour
         _rb = GetComponent<Rigidbody2D>();
         _col = GetComponent<CapsuleCollider2D>();
         _anim = GetComponent<Animator>();
+        temp = GameObject.Find("weapon");
+        Enemy = temp.GetComponent<Transform>();
     }
     private void FixedUpdate()
     {
@@ -111,6 +120,9 @@ public class Movement : MonoBehaviour
             return;
         }
         Move();
+        checkifEnemyinRange();
+
+        
     }
 
     #region Checking
@@ -358,5 +370,33 @@ public class Movement : MonoBehaviour
         Debug.DrawLine(new Vector2(center.x - size.x, center.y + size.y), new Vector2(center.x + size.x, center.y + size.y), color);
         Debug.DrawLine(new Vector2(center.x + size.x, center.y - size.y), new Vector2(center.x - size.x, center.y - size.y), color);
     }
+    #endregion
+
+    #region PlayerDamage
+
+    public void checkifEnemyinRange ()
+    {
+        if (Vector3.Distance (Enemy.position, touchingEnemy.position) < .8f)
+        {
+            TakeDamage(1);
+        }
+    }
+
+    public void TakeDamage (int damage)
+    {
+        health -= damage;
+
+        if(health <= 0)
+        {
+            //Die();
+        }
+    }
+
+    //object is destroyed
+    void Die()
+    {
+        Destroy(gameObject, 1.5f);
+    }
+
     #endregion
 }
