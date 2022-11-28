@@ -998,8 +998,11 @@ MonoBehaviour:
   health: 3
   _anim: {fileID: 739025115}
   Player: {fileID: 1645430831}
-  touchingPlayer: {fileID: 0}
+  touchingPlayer: {fileID: 1897856887}
   isTouchingPlayer: 0
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!212 &739025111
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1060,7 +1063,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 739025109}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.24, y: -1.85, z: 0}
+  m_LocalPosition: {x: -3.07, y: -1.85, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3019,7 +3022,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1897856886}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.28, y: -0.04, z: 0}
+  m_LocalPosition: {x: -0.22, y: -0.04, z: 0}
   m_LocalScale: {x: 1.6210761, y: 1.6209182, z: 1.6629}
   m_ConstrainProportionsScale: 0
   m_Children: []
