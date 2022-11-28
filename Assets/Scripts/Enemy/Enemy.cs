@@ -4,70 +4,98 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    public int health = 3;
-    public Animator _anim;
+    //health
+    private int health = 3;
+    //animator
+    private Animator _anim;
+    //Ai
+    [SerializeField]
+    private float attackDistance = 2f;
+    private Transform _playerTrans;
+    private Transform _trans;
+    // weapon colider
+    [SerializeField]
+    private Collider2D weaponCol;
 
-    public Transform Player;
-
-    public Transform touchingPlayer;
-
-    private string detectionTag = "Player";
-
-    public bool isTouchingPlayer = false;
-
-     [SerializeField] private LayerMask playerLayer;
-
-
-    private void awake()
+    private void Awake()
     {
+        _trans = GetComponent<Transform>();
         _anim = GetComponent<Animator>();
+        weaponCol.enabled = false;
     }
-    public void TakeDamage (int damage)
+    private void Start()
     {
-        health -= damage;
-
-        if(health <= 0)
-        {
-             //Die();
-            _anim.SetBool("isDead", true);
-            Die();
-        }
+        _playerTrans = PlayerControler._instance.GetComponent<Transform>();
     }
 
-
-    void Die()
-    {
-        Destroy(gameObject, 1.5f);
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
     void Update()
     {
-        if (Vector3.Distance (Player.position, touchingPlayer.position) < 3f)
+        CheckRotation();
+        CheckAttack();
+    }
+
+    // check for rotaion
+    private void CheckRotation()
+    {
+        if(_playerTrans == null) return;
+        if (_trans.position.x < _playerTrans.position.x)
         {
-            _anim.Play("goblin_attack");
+            _trans.rotation = Quaternion.Euler(0, 180, 0);
+            return;
         }
-        else if (Vector3.Distance (Player.position, touchingPlayer.position) > 3f)
+        _trans.rotation = Quaternion.Euler(0, 0, 0);
+    }
+
+    #region Attack
+    // Attack Methods
+    private void CheckAttack()
+    {
+        if (AttackDistance() < attackDistance)
         {
-            _anim.Play("goblin_idle");
+            _anim.SetBool("Attacking", true);
+        }
+        else if (AttackDistance() > attackDistance)
+        {
+            _anim.SetBool("Attacking", false);
         }
         //isTouchingPlayer = Physics2D.OverlapCircle(touchingPlayer.position, .2f);
-
-        //if(isTouchingPlayer)
+    }
+    private float AttackDistance()
+    {
+        if(_playerTrans == null) return attackDistance + 1;
+        return Vector3.Distance(_playerTrans.position, _trans.position);
+    }
+    #endregion
+    #region GetDamage
+    //enemy looses health, when health reaches zero Die() function is called
+    public void TakeDamage(int damage)
+    {
+        health -= damage;
+        if (health <= 0)
         {
-           // _anim.Play("goblin_attack");
+            _anim.SetBool("isDead", true);
+            var col = GetComponent<Collider2D>();
+            col.enabled = false;
+            weaponCol.enabled = false;
         }
     }
-     void OnTriggerEnter(Collider other) {
-     if (other.tag == "Player")
-     {
-        _anim.Play("goblin_attack");
-     }
- }
+    #endregion
+    #region Animator events
 
+    private void ActivateWeapon()
+    {
+        weaponCol.enabled = true;
+    }
+
+    private void DisableWeapon()
+    {
+        weaponCol.enabled = false;
+    }
+
+    //object is destroyed
+    private void Die()
+    {
+        Destroy(this.gameObject);
+    }
+    #endregion
 }

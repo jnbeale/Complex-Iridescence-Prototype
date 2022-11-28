@@ -12,8 +12,10 @@ public class Combat : MonoBehaviour
     #endregion
     public Bullet bullet; // for spawning bullets
 
-    public Movement _movement { get; set; }
+    private PlayerControler _controler;
     private Vector2 _aimVector;
+    private bool _invulnerability = false;
+    private float _imuneTime = 0.5f;
 
     private void Awake()
     {
@@ -22,6 +24,9 @@ public class Combat : MonoBehaviour
         {
             _colors[i] = Color.red;
         }
+    }
+    private void Start() {
+        _controler = PlayerControler._instance;
     }
     private void Update()
     {
@@ -35,8 +40,8 @@ public class Combat : MonoBehaviour
     #region zone calculation
     private void CalculateZone()
     {
-        if (_movement == null) return;
-        if (_movement._facingRight)
+        if (_controler._movevement == null) return;
+        if (_controler._movevement._facingRight)
         {
             RightAim(_aimVector);
             return;
@@ -125,6 +130,20 @@ public class Combat : MonoBehaviour
             v.x * Mathf.Sin(delta) + v.y * Mathf.Cos(delta)
         );
     }
+    #region Damage taking
+    private IEnumerator InvulnerabilityTimer()
+    {
+        _invulnerability = true;
+        yield return new WaitForSeconds(_imuneTime);
+        _invulnerability = false;
+    }
+    private void OnTriggerEnter2D(Collider2D other) 
+    {
+        if(other.gameObject.tag != "EnemyWeapon" || _invulnerability) return;
+        _controler._stats.TakeDamage(1);
+        StartCoroutine(InvulnerabilityTimer());
+    }
+    #endregion
     #region gizmos
     private void ColorCheck()
     {

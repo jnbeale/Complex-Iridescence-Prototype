@@ -32,11 +32,7 @@ public class Movement : MonoBehaviour
     #region properties
     public Transform _transform { get; set; }
     
-    public bool _facingRight { get; private set; }
-
-    //health
-    public int health = 3;
-    
+    public bool _facingRight { get; private set; }    
     #endregion
 
     #region serialized 

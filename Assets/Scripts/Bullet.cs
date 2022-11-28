@@ -22,24 +22,20 @@ public class Bullet : MonoBehaviour
     {
         _direction = new Vector3(direction.x, direction.y, 0);
         _trans.rotation = Quaternion.Euler(0, 0, angle);
-        //Destroy(this.gameObject, 3);
     }
 
     public void OnTriggerEnter2D (Collider2D hitInfo)
     {
         Enemy enemy = hitInfo.GetComponent<Enemy>();
         
-        
         if(enemy != null)
         {
-            Debug.Log(hitInfo);
             enemy.TakeDamage(damage);
             Destroy(this.gameObject);
         }
-        else
-        {
-            //Destroy(this.gameObject, 3);
-        }
-        
+    }
+    private void OnBecameInvisible() 
+    {
+        Destroy(this.gameObject);    
     }
 }

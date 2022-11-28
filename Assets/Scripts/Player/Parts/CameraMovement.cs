@@ -18,6 +18,7 @@ public class CameraMovement : MonoBehaviour
 
     void LateUpdate() // runs after update, moves camera after player moved
     {
+        if(playerTrans == null) return;
         _camTransform.position = playerTrans.position + _ofset;
     }
 }
