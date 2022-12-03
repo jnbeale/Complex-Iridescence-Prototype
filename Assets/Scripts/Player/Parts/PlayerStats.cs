@@ -17,6 +17,7 @@ public class PlayerStats : MonoBehaviour
         if(health <= 0)
         {
             Destroy(this.gameObject);
+            Application.Quit();
         }
     }
 }
