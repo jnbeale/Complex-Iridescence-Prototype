@@ -4,15 +4,20 @@ using UnityEngine;
 
 public class PlayerStats : MonoBehaviour
 {
-    public float health {get; private set;}
+    public int health {get; private set;}
+
+    public HealthBar _healthbar {get; private set;}
     private void Awake() 
     {
-        health = 3f;    
+        _healthbar = GetComponent<HealthBar>();
+        health = 3;
+        _healthbar.SetMaxHealth(health);    
     }
 
-    public void TakeDamage (int damage)
+public void TakeDamage (int damage)
     {
         health -= damage;
+        _healthbar.SetHealth(health);
 
         if(health <= 0)
         {
