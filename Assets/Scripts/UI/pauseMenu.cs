@@ -23,7 +23,7 @@ public class pauseMenu : MonoBehaviour
 
     void Start()
     {
-        _healthBar = GameObject.Find("HealthBar");
+        _healthBar = GameObject.Find("Slider");
         _pauseMenu.SetActive(false);
         _healthBar.SetActive(true);
         selection = 1;
