@@ -1776,6 +1776,7 @@ GameObject:
   - component: {fileID: 739025113}
   - component: {fileID: 739025114}
   - component: {fileID: 739025115}
+  - component: {fileID: 739025116}
   m_Layer: 0
   m_Name: enemy_goblin
   m_TagString: Enemy
@@ -1932,6 +1933,20 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &739025116
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 739025109}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b91fd9276623654485cbe2aa968351d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flashMaterial: {fileID: 2100000, guid: f7f222a0d23b45c4eb668aa94d46ba47, type: 2}
+  duration: 0.1
 --- !u!1 &785883894
 GameObject:
   m_ObjectHideFlags: 0
@@ -3904,6 +3919,7 @@ GameObject:
   - component: {fileID: 1645430832}
   - component: {fileID: 1645430834}
   - component: {fileID: 1645430841}
+  - component: {fileID: 1645430842}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -4152,6 +4168,20 @@ MonoBehaviour:
   _pauseMenu: {fileID: 302203457}
   _healthBar: {fileID: 1792094351}
   isPaused: 0
+--- !u!114 &1645430842
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1645430828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b91fd9276623654485cbe2aa968351d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flashMaterial: {fileID: 2100000, guid: f7f222a0d23b45c4eb668aa94d46ba47, type: 2}
+  duration: 0.1
 --- !u!1 &1792094351
 GameObject:
   m_ObjectHideFlags: 0
