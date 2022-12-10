@@ -6,6 +6,8 @@ public class pauseMenu : MonoBehaviour
 {
     //pause button activates menu
     public GameObject _pauseMenu;
+
+    public GameObject _healthBar;
     public bool isPaused;
 
     float selection;
@@ -21,7 +23,9 @@ public class pauseMenu : MonoBehaviour
 
     void Start()
     {
+        _healthBar = GameObject.Find("HealthBar");
         _pauseMenu.SetActive(false);
+        _healthBar.SetActive(true);
         selection = 1;
     }
 
@@ -29,13 +33,13 @@ public class pauseMenu : MonoBehaviour
     void Update()
     {
         
-        
     }
 
     public void PauseGame()
     {
         if (!_pauseMenu.activeSelf){
             _pauseMenu.SetActive(true);
+            _healthBar.SetActive(false);
             Time.timeScale = 0f;
             isPaused = true;
         }
@@ -43,13 +47,17 @@ public class pauseMenu : MonoBehaviour
 
     public void ResumeGame()
     {
+        //_healthBar.SetActive(true);
          if (_pauseMenu.activeSelf){
+            _healthBar.SetActive(true);
             _pauseMenu.SetActive(false);
+            //_healthBar.SetActive(true);
             Time.timeScale = 1f;
             isPaused = false;
          }
          else{
             _pauseMenu.SetActive(true);
+            _healthBar.SetActive(false);
             Time.timeScale = 0f;
             isPaused = true;
          }
