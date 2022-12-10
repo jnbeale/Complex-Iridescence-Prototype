@@ -1,24 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerStats : MonoBehaviour
 {
-    public int health {get; private set;}
-
-    public HealthBar _healthbar {get; private set;}
+    public float health {get; private set;}
+    private float maxHealth;
+    public Slider healthSlider;
     private void Awake() 
     {
-        _healthbar = GetComponent<HealthBar>();
-        health = 3;
-        _healthbar.SetMaxHealth(health);    
+        health = 3f;
+        maxHealth = health;
+        healthSlider.value = 1;
     }
 
 public void TakeDamage (int damage)
     {
         health -= damage;
-        _healthbar.SetHealth(health);
-
+        healthSlider.value = health / maxHealth;
         if(health <= 0)
         {
             Destroy(this.gameObject);
