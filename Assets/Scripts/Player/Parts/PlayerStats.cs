@@ -8,6 +8,8 @@ public class PlayerStats : MonoBehaviour
     
     public float health {get; private set;}
 
+    public SimpleFlash _flash {get; private set;}
+
     public SpriteRenderer playerSprite;
     private float maxHealth;
     public Slider healthSlider;
@@ -15,6 +17,7 @@ public class PlayerStats : MonoBehaviour
     public bool canTakeDamage;
     private void Awake() 
     {
+        _flash = GetComponent<SimpleFlash>();
         health = 3f;
         maxHealth = health;
         healthSlider.value = 1;
@@ -26,7 +29,8 @@ public void TakeDamage (int damage)
         
         if(canTakeDamage == true){
         health -= damage;
-        StartCoroutine(Fade());
+        _flash.Flash();
+        StartCoroutine(invincibility());
         healthSlider.value = health / maxHealth;
         if(health <= 0)
         {
@@ -36,24 +40,20 @@ public void TakeDamage (int damage)
         }
     }
 
-    IEnumerator Fade()
+    IEnumerator  invincibility()
 {
     canTakeDamage = false;
-    for (float alpha = 1f; alpha >= 0; alpha -= 0.1f)
-    {
-        playerSprite.color = new Color(0f, 0f, 0f);
-        yield return new WaitForSeconds(.1f);
-        playerSprite.color = Color.white;
-        yield return new WaitForSeconds(.1f);
-        playerSprite.color = new Color(0f, 0f, 0f);
-        yield return new WaitForSeconds(.1f);
-        playerSprite.color = Color.white;
-        playerSprite.color = new Color(0f, 0f, 0f);
-        yield return new WaitForSeconds(.1f);
-        playerSprite.color = Color.white;
-        yield return new WaitForSeconds(3f);
-        canTakeDamage = true;
-    }
+    _flash.Flash();
+    yield return new WaitForSeconds(.2f);
+    _flash.Flash();
+    yield return new WaitForSeconds(.2f);
+    _flash.Flash();
+    yield return new WaitForSeconds(.2f);
+    _flash.Flash();
+    yield return new WaitForSeconds(.2f);
+    _flash.Flash();
+    yield return new WaitForSeconds(.2f);
+    canTakeDamage = true;
 }
 
 

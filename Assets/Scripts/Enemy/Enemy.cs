@@ -17,8 +17,11 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private Collider2D weaponCol;
 
+    public SimpleFlash _flash {get; private set;}
+
     private void Awake()
     {
+        _flash = GetComponent<SimpleFlash>();
         _trans = GetComponent<Transform>();
         _anim = GetComponent<Animator>();
         weaponCol.enabled = false;
@@ -71,6 +74,7 @@ public class Enemy : MonoBehaviour
     public void TakeDamage(int damage)
     {
         health -= damage;
+        _flash.Flash();
         if (health <= 0)
         {
             _anim.SetBool("isDead", true);
