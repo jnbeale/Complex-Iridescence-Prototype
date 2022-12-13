@@ -33,6 +33,7 @@ public class Inputs : MonoBehaviour
         _inputs.Movement.Jumps.canceled += ctx => controler._movevement.JumpCancel();
         // combat methods
         _inputs.Movement.Shoot.performed += ctx => controler._combat.Shoot();
+        _inputs.Movement.Melee.performed += ctx => controler._combat.Melee();
         _inputs.Movement.VerticalAim.performed += ctx => controler._combat.Aim(ctx.ReadValue<Vector2>());
         _inputs.Menu.pause.performed += ctx => controler._pause.PauseGame();
     }

@@ -17,8 +17,11 @@ public class Combat : MonoBehaviour
     private bool _invulnerability = false;
     private float _imuneTime = 0.5f;
 
+    private Animator _anim;
+
     private void Awake()
     {
+        _anim = GetComponent<Animator>();
         _colors = new Color[8];
         for (int i = 0; i < 8; i++)
         {
@@ -121,6 +124,12 @@ public class Combat : MonoBehaviour
         Bullet shot = Instantiate(bullet);
         shot.transform.position = transform.position;
         shot.Init(RotateVector(Vector2.right, 45 * _zone), 45f * _zone);
+    }
+
+    public void Melee()
+    {
+        _anim.SetTrigger("Melee");
+
     }
     public Vector2 RotateVector(Vector2 v, float degree)
     {

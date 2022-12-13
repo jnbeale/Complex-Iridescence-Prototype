@@ -62,6 +62,15 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Melee"",
+                    ""type"": ""Button"",
+                    ""id"": ""e54695d3-5a64-414f-ba3b-044f4cf69540"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -174,6 +183,17 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                     ""action"": ""Vertical Aim"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""39008e5f-3c3c-4054-82f2-0e37a1031ed5"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Melee"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -286,6 +306,7 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
         m_Movement_Jumps = m_Movement.FindAction("Jumps", throwIfNotFound: true);
         m_Movement_Shoot = m_Movement.FindAction("Shoot", throwIfNotFound: true);
         m_Movement_VerticalAim = m_Movement.FindAction("Vertical Aim", throwIfNotFound: true);
+        m_Movement_Melee = m_Movement.FindAction("Melee", throwIfNotFound: true);
         // Menu
         m_Menu = asset.FindActionMap("Menu", throwIfNotFound: true);
         m_Menu_pause = m_Menu.FindAction("pause", throwIfNotFound: true);
@@ -355,6 +376,7 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
     private readonly InputAction m_Movement_Jumps;
     private readonly InputAction m_Movement_Shoot;
     private readonly InputAction m_Movement_VerticalAim;
+    private readonly InputAction m_Movement_Melee;
     public struct MovementActions
     {
         private @PlayerInputs m_Wrapper;
@@ -363,6 +385,7 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
         public InputAction @Jumps => m_Wrapper.m_Movement_Jumps;
         public InputAction @Shoot => m_Wrapper.m_Movement_Shoot;
         public InputAction @VerticalAim => m_Wrapper.m_Movement_VerticalAim;
+        public InputAction @Melee => m_Wrapper.m_Movement_Melee;
         public InputActionMap Get() { return m_Wrapper.m_Movement; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -384,6 +407,9 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                 @VerticalAim.started -= m_Wrapper.m_MovementActionsCallbackInterface.OnVerticalAim;
                 @VerticalAim.performed -= m_Wrapper.m_MovementActionsCallbackInterface.OnVerticalAim;
                 @VerticalAim.canceled -= m_Wrapper.m_MovementActionsCallbackInterface.OnVerticalAim;
+                @Melee.started -= m_Wrapper.m_MovementActionsCallbackInterface.OnMelee;
+                @Melee.performed -= m_Wrapper.m_MovementActionsCallbackInterface.OnMelee;
+                @Melee.canceled -= m_Wrapper.m_MovementActionsCallbackInterface.OnMelee;
             }
             m_Wrapper.m_MovementActionsCallbackInterface = instance;
             if (instance != null)
@@ -400,6 +426,9 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                 @VerticalAim.started += instance.OnVerticalAim;
                 @VerticalAim.performed += instance.OnVerticalAim;
                 @VerticalAim.canceled += instance.OnVerticalAim;
+                @Melee.started += instance.OnMelee;
+                @Melee.performed += instance.OnMelee;
+                @Melee.canceled += instance.OnMelee;
             }
         }
     }
@@ -476,6 +505,7 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
         void OnJumps(InputAction.CallbackContext context);
         void OnShoot(InputAction.CallbackContext context);
         void OnVerticalAim(InputAction.CallbackContext context);
+        void OnMelee(InputAction.CallbackContext context);
     }
     public interface IMenuActions
     {
