@@ -17,7 +17,19 @@ public class Combat : MonoBehaviour
     private bool _invulnerability = false;
     private float _imuneTime = 0.5f;
 
+    public bool _isAttacking {get; private set; }
+
+    public Transform circleOrigin;
+    public float radius;
+    
+    //for melee attack
     private Animator _anim;
+    public Transform attackPoint;
+    public float attackRange = 0.5f;
+
+    public LayerMask enemyLayers;
+
+
 
     private void Awake()
     {
@@ -126,10 +138,36 @@ public class Combat : MonoBehaviour
         shot.Init(RotateVector(Vector2.right, 45 * _zone), 45f * _zone);
     }
 
+    public void ResetIsAttacking()
+    {
+        _isAttacking = false;
+    }
+
     public void Melee()
     {
-        _anim.SetTrigger("Melee");
+        //Play attack animation
+        _anim.SetTrigger("isAttacking");
+        //Detect enemies in range of attack
+        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
+        
+        //Damage them
+        foreach(Collider2D enemy in hitEnemies)
+        {
+            Enemy enemyStats = enemy.GetComponent<Enemy>();
+           // Debug.Log("We hit " + enemy.name);
+            //Enemy enemy = hitInfo.GetComponent<Enemy>();
+            enemyStats.TakeDamage(1);
+        }
 
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        if(attackPoint == null)
+        {
+            return;
+        }
+        Gizmos.DrawWireSphere(attackPoint.position, attackRange);
     }
     public Vector2 RotateVector(Vector2 v, float degree)
     {

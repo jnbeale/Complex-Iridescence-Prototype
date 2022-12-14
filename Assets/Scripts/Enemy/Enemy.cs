@@ -73,6 +73,7 @@ public class Enemy : MonoBehaviour
     //enemy looses health, when health reaches zero Die() function is called
     public void TakeDamage(int damage)
     {
+        StartCoroutine(invincibility());
         health -= damage;
         _flash.Flash();
         if (health <= 0)
@@ -101,5 +102,19 @@ public class Enemy : MonoBehaviour
     {
         Destroy(this.gameObject);
     }
+
+    IEnumerator  invincibility()
+{
+    _flash.Flash();
+    yield return new WaitForSeconds(.2f);
+    _flash.Flash();
+    yield return new WaitForSeconds(.2f);
+    _flash.Flash();
+    yield return new WaitForSeconds(.2f);
+    _flash.Flash();
+    yield return new WaitForSeconds(.2f);
+    _flash.Flash();
+    yield return new WaitForSeconds(.2f);
+}
     #endregion
 }
