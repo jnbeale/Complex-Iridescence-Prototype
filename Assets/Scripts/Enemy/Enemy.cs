@@ -11,7 +11,7 @@ public class Enemy : MonoBehaviour
     //Ai
     [SerializeField]
     private float attackDistance = 2f;
-    private Transform _playerTrans;
+    public Transform _playerTrans;
     private Transform _trans;
     // weapon colider
     [SerializeField]
