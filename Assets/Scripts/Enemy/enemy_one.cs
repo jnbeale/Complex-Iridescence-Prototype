@@ -52,7 +52,7 @@ public class enemy_one : MonoBehaviour
 
         target = new Vector2(playerobj.transform.position.x,-1f);
         float step = enemySpeed * Time.deltaTime;
-         
+         RaycastHit2D hitVal = PlayerInSight();
 
         //cooldownTimer += Time.deltaTime;
         //ispatrolling = true;
@@ -63,12 +63,24 @@ public class enemy_one : MonoBehaviour
          //transform.position = new Vector3(tempVector2.x, tempVector2.y, transform.position.z);
         
 
-        if(PlayerInSight())
+        if(hitVal.collider != null)
         {
 
             //enemyobj.transform.position = Vector2.MoveTowards(enemy.transform.position, target, step);
-            transform.Translate(Vector3.right * enemySpeed * Time.deltaTime);
-           
+            //transform.Translate(Vector3.right * enemySpeed * Time.deltaTime);
+
+            if(hitVal.collider.transform.position.x < transform.position.x)
+            {
+                //move right
+                if(Mathf.Abs(hitVal.collider.transform.position.x) - Mathf.Abs(transform.position.x) > 0.2 )
+                 transform.Translate(Vector3.left * enemySpeed * Time.deltaTime);
+            }
+            else
+            {
+                 if(Mathf.Abs(hitVal.collider.transform.position.x) - Mathf.Abs(transform.position.x) < 0.2 )
+                 transform.Translate(Vector3.right * enemySpeed * Time.deltaTime);
+            }
+           /*
             if(enemyPatrol.enabled == true)
             {
                 enemyRun.enabled = false;
@@ -82,7 +94,7 @@ public class enemy_one : MonoBehaviour
                 ispatrolling = false;
                 isrunning = true;
             }
-
+*/
            /* if(cooldownTimer >= attackCooldown)
             {
                 cooldownTimer = 0;
@@ -107,13 +119,14 @@ public class enemy_one : MonoBehaviour
 
     }
     
-     private bool PlayerInSight()
+     private RaycastHit2D PlayerInSight()
     {
         RaycastHit2D hit = Physics2D.BoxCast(boxCollider.bounds.center + transform.right * range * transform.localScale.x * colliderDistance, 
         new Vector3(boxCollider.bounds.size.x * range, boxCollider.bounds.size.y, boxCollider.bounds.size.z),
         0, Vector2.left, 0, playerLayer);
 
-        return hit.collider != null;
+        //return hit.collider != null;
+        return hit;
     }
 
     private void OnDrawGizmos()

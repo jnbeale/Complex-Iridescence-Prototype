@@ -2030,12 +2030,12 @@ MonoBehaviour:
     m_Bits: 1
   enemy: {fileID: 739025112}
   cooldownTimer: Infinity
-  colliderDistance: -0.02
+  colliderDistance: 0.24
   ispatrolling: 0
   isrunning: 1
-  range: 9.31
+  range: 11.03
   player: {fileID: 1645430831}
-  enemySpeed: 10
+  enemySpeed: 5
   enemyobj: {fileID: 739025109}
   playerobj: {fileID: 1645430828}
   attackCooldown: 2
@@ -2966,7 +2966,7 @@ MonoBehaviour:
   leftEdge: {fileID: 1965109293}
   rightEdge: {fileID: 380915883}
   enemy: {fileID: 739025112}
-  enemySpeed: 5
+  enemySpeed: 4
 --- !u!4 &934447397
 Transform:
   m_ObjectHideFlags: 0
@@ -3813,7 +3813,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 8.833363
+  orthographic size: 10.263678
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
